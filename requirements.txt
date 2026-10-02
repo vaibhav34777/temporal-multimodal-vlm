@@ -1,0 +1,16 @@
+torch==2.2.0
+torchvision==0.17.0
+transformers==4.40.0
+timm==0.9.16
+Pillow==10.3.0
+opencv-python==4.9.0.80
+numpy==1.26.4
+pandas==2.2.2
+scikit-learn==1.4.2
+tqdm==4.66.2
+matplotlib==3.8.4
+seaborn==0.13.2
+accelerate==0.29.3
+bitsandbytes==0.43.0
+python-docx==1.1.2
+reportlab==4.1.0
