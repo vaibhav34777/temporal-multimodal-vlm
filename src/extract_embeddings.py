@@ -35,7 +35,6 @@ def extract_embeddings(csv_path, frames_dir, output_dir, model_name="facebook/di
                 inputs = processor(images=image, return_tensors="pt").to(device)
                 
                 outputs = model(**inputs)
-                # CLS token representation (index 0)
                 emb = outputs.last_hidden_state[:, 0, :].cpu().numpy().squeeze()
                 embeddings.append(emb)
                 

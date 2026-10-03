@@ -1,0 +1,281 @@
+{
+  "ordered_acc": 40.0,
+  "shuffled_acc": 44.0,
+  "records": [
+    {
+      "video_id": "85446",
+      "class_name": "Pushing [something] from left to right",
+      "true_label": 0,
+      "ordered_pred": 0,
+      "shuffled_pred": 0,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "0",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "91241",
+      "class_name": "Pushing [something] from left to right",
+      "true_label": 0,
+      "ordered_pred": 1,
+      "shuffled_pred": 0,
+      "ordered_correct": 0,
+      "shuffled_correct": 1,
+      "ordered_response": "1",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "201692",
+      "class_name": "Pushing [something] from left to right",
+      "true_label": 0,
+      "ordered_pred": 0,
+      "shuffled_pred": 2,
+      "ordered_correct": 1,
+      "shuffled_correct": 0,
+      "ordered_response": "0",
+      "shuffled_response": "2"
+    },
+    {
+      "video_id": "30104",
+      "class_name": "Pushing [something] from left to right",
+      "true_label": 0,
+      "ordered_pred": 0,
+      "shuffled_pred": 0,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "0",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "54224",
+      "class_name": "Pushing [something] from left to right",
+      "true_label": 0,
+      "ordered_pred": 0,
+      "shuffled_pred": 0,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "0",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "163169",
+      "class_name": "Pushing [something] from right to left",
+      "true_label": 1,
+      "ordered_pred": 2,
+      "shuffled_pred": 2,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "2",
+      "shuffled_response": "2"
+    },
+    {
+      "video_id": "161659",
+      "class_name": "Pushing [something] from right to left",
+      "true_label": 1,
+      "ordered_pred": 0,
+      "shuffled_pred": 0,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "0",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "144311",
+      "class_name": "Pushing [something] from right to left",
+      "true_label": 1,
+      "ordered_pred": 0,
+      "shuffled_pred": 0,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "0",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "150362",
+      "class_name": "Pushing [something] from right to left",
+      "true_label": 1,
+      "ordered_pred": 2,
+      "shuffled_pred": 0,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "2",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "39756",
+      "class_name": "Pushing [something] from right to left",
+      "true_label": 1,
+      "ordered_pred": 0,
+      "shuffled_pred": 0,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "0",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "90063",
+      "class_name": "Moving [something] up",
+      "true_label": 2,
+      "ordered_pred": 2,
+      "shuffled_pred": 2,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "2",
+      "shuffled_response": "2"
+    },
+    {
+      "video_id": "88024",
+      "class_name": "Moving [something] up",
+      "true_label": 2,
+      "ordered_pred": 2,
+      "shuffled_pred": 2,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "2",
+      "shuffled_response": "2"
+    },
+    {
+      "video_id": "220085",
+      "class_name": "Moving [something] up",
+      "true_label": 2,
+      "ordered_pred": 0,
+      "shuffled_pred": 0,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "0",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "24706",
+      "class_name": "Moving [something] up",
+      "true_label": 2,
+      "ordered_pred": 0,
+      "shuffled_pred": 0,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "0",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "102091",
+      "class_name": "Moving [something] up",
+      "true_label": 2,
+      "ordered_pred": 0,
+      "shuffled_pred": 0,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "0",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "155885",
+      "class_name": "Moving [something] down",
+      "true_label": 3,
+      "ordered_pred": 2,
+      "shuffled_pred": 2,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "2",
+      "shuffled_response": "2"
+    },
+    {
+      "video_id": "6565",
+      "class_name": "Moving [something] down",
+      "true_label": 3,
+      "ordered_pred": 3,
+      "shuffled_pred": 0,
+      "ordered_correct": 1,
+      "shuffled_correct": 0,
+      "ordered_response": "3",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "187093",
+      "class_name": "Moving [something] down",
+      "true_label": 3,
+      "ordered_pred": 4,
+      "shuffled_pred": 4,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "4",
+      "shuffled_response": "4"
+    },
+    {
+      "video_id": "1181",
+      "class_name": "Moving [something] down",
+      "true_label": 3,
+      "ordered_pred": 2,
+      "shuffled_pred": 2,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "2",
+      "shuffled_response": "2"
+    },
+    {
+      "video_id": "87616",
+      "class_name": "Moving [something] down",
+      "true_label": 3,
+      "ordered_pred": 2,
+      "shuffled_pred": 0,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "2",
+      "shuffled_response": "0"
+    },
+    {
+      "video_id": "7284",
+      "class_name": "Tearing [something] into two pieces",
+      "true_label": 4,
+      "ordered_pred": 4,
+      "shuffled_pred": 4,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "4",
+      "shuffled_response": "4"
+    },
+    {
+      "video_id": "199520",
+      "class_name": "Tearing [something] into two pieces",
+      "true_label": 4,
+      "ordered_pred": 4,
+      "shuffled_pred": 4,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "4",
+      "shuffled_response": "4"
+    },
+    {
+      "video_id": "185796",
+      "class_name": "Tearing [something] into two pieces",
+      "true_label": 4,
+      "ordered_pred": 0,
+      "shuffled_pred": 4,
+      "ordered_correct": 0,
+      "shuffled_correct": 1,
+      "ordered_response": "0",
+      "shuffled_response": "4"
+    },
+    {
+      "video_id": "7232",
+      "class_name": "Tearing [something] into two pieces",
+      "true_label": 4,
+      "ordered_pred": 0,
+      "shuffled_pred": 4,
+      "ordered_correct": 0,
+      "shuffled_correct": 1,
+      "ordered_response": "0",
+      "shuffled_response": "4"
+    },
+    {
+      "video_id": "191667",
+      "class_name": "Tearing [something] into two pieces",
+      "true_label": 4,
+      "ordered_pred": 4,
+      "shuffled_pred": 4,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "4",
+      "shuffled_response": "4"
+    }
+  ]
+}
