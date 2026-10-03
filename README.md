@@ -112,11 +112,58 @@ Accuracy climbs monotonically as more temporal context unfolds, with the sharpes
 
 ## Vision-Language Model (VLM) Component
 
-*(Section reserved for upcoming LLaVA-OneVision evaluation results and decisive-frame qualitative findings)*
+**Model**: GPT-4o (OpenAI API, vision-enabled, zero-shot)  
+**Protocol**: 25 validation videos (5 per class), 4 frames each at 336×336, classified twice — once with frames in chronological order and once with frames randomly shuffled.  
+**API Key**: Set `OPENAI_API_KEY` in a `.env` file (see `.env.example`). On Kaggle, add it as a Kaggle Secret.
 
-- **Model**: LLaVA-OneVision-Qwen2-7B / 0.5B (4-bit quantized, multi-frame native)
-- **Task Setup**: Zero-shot 5-way sequence action classification on ordered vs. shuffled frame sequences.
-- **Interpretability Goal**: Chain-of-thought prompt prompting the model to explicitly designate which individual frame in the sequence provided the decisive clue.
+### Prompt Design
+
+The VLM is given a structured Chain-of-Thought prompt that asks it to:
+1. Describe the motion observed across the frames, paying attention to direction.
+2. Identify the specific frame that provides the most decisive directional evidence and explain why.
+3. Select a label from the five categories.
+
+This design produces interpretable reasoning traces per video and doubles as a probe for whether the model is reasoning temporally or from static appearance.
+
+### VLM Results
+
+| Condition | Accuracy |
+|---|---|
+| Ordered Frames | **68.00%** |
+| Shuffled Frames | **44.00%** |
+| Order Sensitivity (Δ) | **−24.00pp** |
+
+### Per-Class VLM Accuracy (GPT-4o)
+
+| Action Class | Ordered | Shuffled | Δ |
+|---|---|---|---|
+| *Pushing from left to right* | 40% | 20% | −20pp |
+| *Pushing from right to left* | **100%** | 60% | −40pp |
+| *Moving up* | 20% | 0% | −20pp |
+| *Moving down* | **100%** | 60% | −40pp |
+| *Tearing into two pieces* | 80% | 80% | 0pp |
+
+![VLM Per-Class Accuracy](results/vlm_per_class_accuracy.png)
+
+### Analysis
+
+GPT-4o shows a statistically meaningful **24pp drop** when frames are shuffled, confirming it uses temporal order rather than treating the input as a pure bag of images. However, several patterns reveal the limits of zero-shot VLM reasoning on this task:
+
+- **Directional confusion remains**: On *Push L→R* (40%) and *Move Up* (20%), the model still confuses directions despite explicit spatial descriptions in the prompt. The model's CoT reasoning typically identifies the correct axis of movement (horizontal vs. vertical) but struggles to determine direction when object displacement between sparse 4-frame samples is subtle.
+- **Asymmetric class performance**: The model achieves 100% ordered accuracy on *Push R→L* and *Move Down* but only 40% and 20% on their mirror classes. This asymmetry suggests a spatial bias in how GPT-4o interprets small-scale directional cues in 336×336 frames.
+- **Tearing is robust to shuffling**: The tearing class (80% ordered, 80% shuffled) requires recognizing a static end-state (two separated pieces), making it order-insensitive — consistent with what our trained models also show.
+- **Order sensitivity is real**: The 24pp drop on shuffling is comparable to the drops seen in our trained temporal models (GRU: −20pp, Transformer+PE: −21pp), indicating GPT-4o is doing genuine temporal reasoning, not just matching frame appearances.
+
+**Comparison to trained temporal models:**
+
+| Model | Ordered Accuracy | Shuffled Accuracy | Δ |
+|---|---|---|---|
+| Single-Frame Baseline | 55.81% | — | — |
+| Temporal GRU | 75.40% | 55.13% | −20pp |
+| Transformer + PE | **77.22%** | 56.26% | −21pp |
+| GPT-4o (zero-shot) | 68.00% | 44.00% | −24pp |
+
+GPT-4o without any task-specific training reaches 68%, closing much of the gap to trained temporal models (77%) while using only 4 frames and no learned motion representations. Its stronger order sensitivity (−24pp) relative to the trained models may reflect that it is integrating temporal information more explicitly via language-mediated reasoning rather than implicitly through recurrence or attention over embeddings.
 
 ---
 

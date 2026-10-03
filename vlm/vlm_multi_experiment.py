@@ -1,15 +1,23 @@
 import os
 import json
+import base64
 import random
-import torch
+import argparse
 import pandas as pd
 import numpy as np
+from io import BytesIO
 from PIL import Image
-from transformers import AutoProcessor, LlavaOnevisionForConditionalGeneration, BitsAndBytesConfig
+from openai import OpenAI
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, Table, TableStyle, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 CLASS_NAMES = [
     "Pushing [something] from left to right",
@@ -19,21 +27,34 @@ CLASS_NAMES = [
     "Tearing [something] into two pieces"
 ]
 
-LABEL_MAP = {name: idx for idx, name in enumerate(CLASS_NAMES)}
-
 VLM_PROMPT = (
     "You are shown {n} video frames in chronological order of a single hand action.\n\n"
-    "Step 1 - Briefly describe what is happening across the frames (1-2 sentences).\n"
-    "Step 2 - State which frame number (1 to {n}) is the most decisive for identifying the action and why.\n"
-    "Step 3 - Choose the action label from the list below:\n"
-    "   0 = Pushing something from left to right\n"
-    "   1 = Pushing something from right to left\n"
-    "   2 = Moving something up\n"
-    "   3 = Moving something down\n"
-    "   4 = Tearing something into two pieces\n\n"
-    "End your response with this exact line:\n"
-    "FINAL_LABEL: <write only the digit 0, 1, 2, 3, or 4 here>"
+    "Step 1 - Briefly describe the motion you observe across the frames (1-2 sentences). "
+    "Pay close attention to the DIRECTION of movement (left, right, up, down).\n"
+    "Step 2 - State which frame number (1 to {n}) provides the clearest evidence of direction and why.\n"
+    "Step 3 - Select exactly one label from the numbered list below. "
+    "Read each description carefully before deciding:\n"
+    "   Label 0 = a hand moves an object HORIZONTALLY from the LEFT side toward the RIGHT side\n"
+    "   Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n"
+    "   Label 2 = a hand moves an object VERTICALLY UPWARD (away from the surface, toward the top of frame)\n"
+    "   Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n"
+    "   Label 4 = a hand TEARS an object, splitting it into two separate pieces\n\n"
+    "End your entire response with this line (replace X with your chosen digit):\n"
+    "FINAL_LABEL: X"
 )
+
+
+def get_client():
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("OPENAI_API_KEY not found. Set it in your .env file or as an environment variable.")
+    return OpenAI(api_key=api_key)
+
+
+def image_to_base64(img: Image.Image) -> str:
+    buf = BytesIO()
+    img.save(buf, format="JPEG", quality=85)
+    return base64.b64encode(buf.getvalue()).decode("utf-8")
 
 
 def parse_label(response_text):
@@ -54,25 +75,6 @@ def parse_label(response_text):
     return -1
 
 
-def load_model(model_id="llava-hf/llava-onevision-qwen2-7b-ov-hf"):
-    print(f"Loading LLaVA-OneVision model ({model_id}) in 4-bit NF4...")
-    quantization_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_quant_type="nf4",
-        bnb_4bit_use_double_quant=True,
-        bnb_4bit_compute_dtype=torch.bfloat16
-    )
-    processor = AutoProcessor.from_pretrained(model_id)
-    model = LlavaOnevisionForConditionalGeneration.from_pretrained(
-        model_id,
-        quantization_config=quantization_config,
-        device_map="auto",
-        low_cpu_mem_usage=True
-    )
-    model.eval()
-    return processor, model
-
-
 def get_frame_paths(video_id, frames_base_dir, num_frames=4):
     vid_dir = os.path.join(frames_base_dir, str(video_id))
     if not os.path.exists(vid_dir):
@@ -84,39 +86,42 @@ def get_frame_paths(video_id, frames_base_dir, num_frames=4):
     return [os.path.join(vid_dir, frame_files[idx]) for idx in indices]
 
 
-def run_vlm_classification(processor, model, frame_paths, shuffled=False):
-    images = [Image.open(p).convert("RGB").resize((224, 224)) for p in frame_paths]
+def run_vlm_classification(client, frame_paths, model_name="gpt-4o", shuffled=False):
+    images = [Image.open(p).convert("RGB").resize((336, 336)) for p in frame_paths]
     if shuffled:
         images = random.sample(images, len(images))
 
     n = len(images)
     prompt_text = VLM_PROMPT.format(n=n)
-    image_tokens = "".join([f"<image>\n" for _ in range(n)])
-    conversation = [
-        {
-            "role": "user",
-            "content": [{"type": "text", "text": image_tokens + prompt_text}]
-        }
-    ]
-    text_input = processor.apply_chat_template(conversation, add_generation_prompt=True)
 
-    torch.cuda.empty_cache()
-    inputs = processor(text=text_input, images=images, return_tensors="pt").to(model.device)
+    content = []
+    for i, img in enumerate(images):
+        b64 = image_to_base64(img)
+        content.append({
+            "type": "text",
+            "text": f"Frame {i+1}:"
+        })
+        content.append({
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/jpeg;base64,{b64}",
+                "detail": "low"
+            }
+        })
+    content.append({"type": "text", "text": prompt_text})
 
-    with torch.no_grad():
-        output = model.generate(**inputs, max_new_tokens=200, do_sample=False)
+    response = client.chat.completions.create(
+        model=model_name,
+        messages=[{"role": "user", "content": content}],
+        max_tokens=400,
+        temperature=0.0
+    )
 
-    decoded = processor.decode(output[0], skip_special_tokens=True)
-    response = decoded.split("assistant")[-1].strip() if "assistant" in decoded.lower() else decoded.strip()
-
-    del inputs
-    del output
-    torch.cuda.empty_cache()
-
-    return response, parse_label(response)
+    response_text = response.choices[0].message.content.strip()
+    return response_text, parse_label(response_text)
 
 
-def run_accuracy_experiment(processor, model, df, frames_base_dir, num_videos=25, num_frames=4, seed=42):
+def run_accuracy_experiment(client, df, frames_base_dir, model_name="gpt-4o", num_videos=25, num_frames=4, seed=42):
     random.seed(seed)
     np.random.seed(seed)
 
@@ -136,8 +141,8 @@ def run_accuracy_experiment(processor, model, df, frames_base_dir, num_videos=25
         if len(frame_paths) < 2:
             continue
 
-        ordered_response, ordered_pred = run_vlm_classification(processor, model, frame_paths, shuffled=False)
-        shuffled_response, shuffled_pred = run_vlm_classification(processor, model, frame_paths, shuffled=True)
+        ordered_response, ordered_pred = run_vlm_classification(client, frame_paths, model_name=model_name, shuffled=False)
+        shuffled_response, shuffled_pred = run_vlm_classification(client, frame_paths, model_name=model_name, shuffled=True)
 
         results.append({
             "video_id": video_id,
@@ -151,34 +156,43 @@ def run_accuracy_experiment(processor, model, df, frames_base_dir, num_videos=25
             "shuffled_response": shuffled_response,
             "frame_paths": frame_paths
         })
-        print(f"  [{video_id}] GT={true_label} | Ordered={ordered_pred} ({'OK' if ordered_pred==true_label else 'X'}) | Shuffled={shuffled_pred} ({'OK' if shuffled_pred==true_label else 'X'})")
+        print(f"  [{video_id}] GT={true_label} ({row['class_name'][:30]}) | Ordered={ordered_pred} ({'OK' if ordered_pred==true_label else 'X'}) | Shuffled={shuffled_pred} ({'OK' if shuffled_pred==true_label else 'X'})")
         if len(results) <= 3:
-            print(f"  --- Raw response (first 3 videos for format verification) ---")
-            print(ordered_response[:800])
-            print(f"  ---------------------------------------------------------------")
+            print(f"  --- Raw response ---")
+            print(ordered_response)
+            print(f"  --------------------")
 
     ordered_acc = 100.0 * sum(r['ordered_correct'] for r in results) / len(results) if results else 0.0
     shuffled_acc = 100.0 * sum(r['shuffled_correct'] for r in results) / len(results) if results else 0.0
 
-    print(f"\n========== VLM Classification Results ==========")
+    print(f"\n========== VLM Classification Results ({model_name}) ==========")
     print(f"  Videos evaluated: {len(results)}")
     print(f"  Ordered Frames  Accuracy: {ordered_acc:.2f}%")
     print(f"  Shuffled Frames Accuracy: {shuffled_acc:.2f}%")
     print(f"  Accuracy drop (ordered - shuffled): {ordered_acc - shuffled_acc:.2f}pp")
-    print(f"=================================================\n")
+    print(f"==============================================================\n")
 
     return results, ordered_acc, shuffled_acc
 
 
-def create_vlm_pdf_report(records, ordered_acc, shuffled_acc, output_pdf_path):
+def pick_report_cases(results):
+    seen_classes = {}
+    for rec in results:
+        cls = rec['class_name']
+        if cls not in seen_classes:
+            seen_classes[cls] = rec
+        if len(seen_classes) == len(CLASS_NAMES):
+            break
+    return [seen_classes[cls] for cls in CLASS_NAMES if cls in seen_classes]
+
+
+def create_vlm_pdf_report(records, ordered_acc, shuffled_acc, model_name, output_pdf_path):
     os.makedirs(os.path.dirname(output_pdf_path), exist_ok=True)
     doc = SimpleDocTemplate(
         output_pdf_path,
         pagesize=letter,
-        rightMargin=36,
-        leftMargin=36,
-        topMargin=36,
-        bottomMargin=36
+        rightMargin=36, leftMargin=36,
+        topMargin=36, bottomMargin=36
     )
 
     styles = getSampleStyleSheet()
@@ -195,26 +209,22 @@ def create_vlm_pdf_report(records, ordered_acc, shuffled_acc, output_pdf_path):
         fontName='Helvetica-Bold', fontSize=11, leading=14,
         textColor=colors.HexColor("#2B6CB0"), spaceBefore=8, spaceAfter=4)
 
-    body_style = ParagraphStyle('BodyTextCustom', parent=styles['Normal'],
+    body_style = ParagraphStyle('BodyText', parent=styles['Normal'],
         fontName='Helvetica', fontSize=9, leading=12,
         textColor=colors.HexColor("#2D3748"))
 
-    box_style = ParagraphStyle('BoxText', parent=styles['Normal'],
-        fontName='Helvetica', fontSize=8.5, leading=11.5,
-        textColor=colors.HexColor("#1A202C"))
-
     story = []
 
-    story.append(Paragraph("VLM Classification Experiment: LLaVA-OneVision (Ordered vs Shuffled)", title_style))
+    story.append(Paragraph(f"VLM Experiment: {model_name} — Ordered vs. Shuffled Frame Classification", title_style))
     story.append(Paragraph(
-        f"Model: LLaVA-OneVision-Qwen2-0.5B &nbsp;|&nbsp; Frames per video: 4 &nbsp;|&nbsp; Videos evaluated: {len(records)}",
+        f"Model: {model_name} &nbsp;|&nbsp; Frames per video: 4 &nbsp;|&nbsp; Videos evaluated: {len(records)}",
         subtitle_style))
 
     summary_data = [
         ["Condition", "Accuracy"],
         ["Ordered Frames", f"{ordered_acc:.2f}%"],
         ["Shuffled Frames", f"{shuffled_acc:.2f}%"],
-        ["Drop (Ordered - Shuffled)", f"{ordered_acc - shuffled_acc:.2f}pp"],
+        ["Drop (Ordered − Shuffled)", f"{ordered_acc - shuffled_acc:.2f}pp"],
     ]
     summary_table = Table(summary_data, colWidths=[300, 200])
     summary_table.setStyle(TableStyle([
@@ -231,22 +241,29 @@ def create_vlm_pdf_report(records, ordered_acc, shuffled_acc, output_pdf_path):
     story.append(summary_table)
     story.append(Spacer(1, 18))
 
-    display_records = records[:3]
-    for idx, rec in enumerate(display_records):
-        story.append(Paragraph(f"Case Study {idx+1}: {rec['class_name']}", heading_style))
+    story.append(Paragraph("Case Studies — One Example per Action Class (Ordered Frames)", heading_style))
+    story.append(Spacer(1, 6))
+
+    report_cases = pick_report_cases(records)
+
+    for idx, rec in enumerate(report_cases):
+        story.append(Paragraph(f"Case {idx+1}: {rec['class_name']}", heading_style))
         story.append(Paragraph(
             f"<b>Video ID:</b> {rec['video_id']} &nbsp;|&nbsp; "
-            f"<b>Ground Truth:</b> {rec['true_label']} ({rec['class_name']})",
+            f"<b>Ground Truth Label:</b> {rec['true_label']} &nbsp;|&nbsp; "
+            f"<b>Ordered Prediction:</b> {rec['ordered_pred']} ({'Correct' if rec['ordered_correct'] else 'Wrong'}) &nbsp;|&nbsp; "
+            f"<b>Shuffled Prediction:</b> {rec['shuffled_pred']} ({'Correct' if rec['shuffled_correct'] else 'Wrong'})",
             subtitle_style))
 
         img_cells = []
         label_cells = []
         for f_idx, img_path in enumerate(rec['frame_paths']):
-            rl_img = RLImage(img_path, width=120, height=90)
+            rl_img = RLImage(img_path, width=110, height=82)
             img_cells.append(rl_img)
             label_cells.append(Paragraph(f"<font size=8><b>Frame {f_idx+1}</b></font>", body_style))
 
-        img_table = Table([img_cells, label_cells], colWidths=[130] * 4)
+        col_w = [120] * len(rec['frame_paths'])
+        img_table = Table([img_cells, label_cells], colWidths=col_w)
         img_table.setStyle(TableStyle([
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -254,28 +271,18 @@ def create_vlm_pdf_report(records, ordered_acc, shuffled_acc, output_pdf_path):
             ('TOPPADDING', (0, 0), (-1, -1), 2),
         ]))
         story.append(img_table)
-        story.append(Spacer(1, 8))
+        story.append(Spacer(1, 6))
 
-        result_data = [
-            ["Condition", "Predicted Label", "Correct?"],
-            ["Ordered", str(rec['ordered_pred']), "Yes" if rec['ordered_correct'] else "No"],
-            ["Shuffled", str(rec['shuffled_pred']), "Yes" if rec['shuffled_correct'] else "No"],
-        ]
-        result_table = Table(result_data, colWidths=[160, 160, 160])
-        result_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2B6CB0")),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, -1), 9),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.HexColor("#F7FAFC"), colors.HexColor("#EDF2F7")]),
-            ('BOX', (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E0")),
-            ('GRID', (0, 0), (-1, -1), 0.3, colors.HexColor("#CBD5E0")),
-            ('PADDING', (0, 0), (-1, -1), 5),
-        ]))
-        story.append(result_table)
+        truncated_response = rec['ordered_response'][:700] + ("..." if len(rec['ordered_response']) > 700 else "")
+        story.append(Paragraph("<b>Model Chain-of-Thought (Ordered):</b>", body_style))
+        story.append(Paragraph(truncated_response.replace('\n', '<br/>'), body_style))
+        story.append(Spacer(1, 4))
 
-        if idx < len(display_records) - 1:
+        shuffled_truncated = rec['shuffled_response'][:400] + ("..." if len(rec['shuffled_response']) > 400 else "")
+        story.append(Paragraph("<b>Model Response (Shuffled):</b>", body_style))
+        story.append(Paragraph(shuffled_truncated.replace('\n', '<br/>'), body_style))
+
+        if idx < len(report_cases) - 1:
             story.append(PageBreak())
 
     doc.build(story)
@@ -283,7 +290,6 @@ def create_vlm_pdf_report(records, ordered_acc, shuffled_acc, output_pdf_path):
 
 
 if __name__ == "__main__":
-    import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--val_csv', type=str, default='/kaggle/working/val_subset.csv')
     parser.add_argument('--frames_dir', type=str, default='/kaggle/working/frames')
@@ -291,7 +297,7 @@ if __name__ == "__main__":
     parser.add_argument('--num_frames', type=int, default=4)
     parser.add_argument('--output_dir', type=str, default='/kaggle/working/results')
     parser.add_argument('--results_json', type=str, default='/kaggle/working/results/vlm_accuracy_results.json')
-    parser.add_argument('--model_id', type=str, default='llava-hf/llava-onevision-qwen2-7b-ov-hf')
+    parser.add_argument('--model_name', type=str, default='gpt-4o')
     args, _ = parser.parse_known_args()
 
     val_csv = args.val_csv
@@ -302,21 +308,26 @@ if __name__ == "__main__":
         frames_dir = "frames"
 
     df = pd.read_csv(val_csv)
+    client = get_client()
 
-    processor, model = load_model(args.model_id)
-
-    print(f"\nRunning classification on {args.num_videos} videos (ordered + shuffled)...")
+    print(f"\nRunning classification on {args.num_videos} videos (ordered + shuffled) using {args.model_name}...")
     results, ordered_acc, shuffled_acc = run_accuracy_experiment(
-        processor, model, df, frames_dir,
+        client, df, frames_dir,
+        model_name=args.model_name,
         num_videos=args.num_videos,
         num_frames=args.num_frames
     )
 
     os.makedirs(args.output_dir, exist_ok=True)
+    serializable = [{k: v for k, v in r.items() if k != 'frame_paths'} for r in results]
     with open(args.results_json, "w") as f:
-        serializable = [{k: v for k, v in r.items() if k != 'frame_paths'} for r in results]
-        json.dump({"ordered_acc": ordered_acc, "shuffled_acc": shuffled_acc, "records": serializable}, f, indent=2)
+        json.dump({
+            "model": args.model_name,
+            "ordered_acc": ordered_acc,
+            "shuffled_acc": shuffled_acc,
+            "records": serializable
+        }, f, indent=2)
     print(f"Results JSON saved to: {args.results_json}")
 
     pdf_path = os.path.join(args.output_dir, "vlm_experiment_report.pdf")
-    create_vlm_pdf_report(results, ordered_acc, shuffled_acc, pdf_path)
+    create_vlm_pdf_report(results, ordered_acc, shuffled_acc, args.model_name, pdf_path)

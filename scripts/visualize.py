@@ -193,7 +193,7 @@ def plot_shuffling_experiment(
     if transformer_nope_shuffled_acc is None:
         transformer_nope_shuffled_acc = 61.96
     if vlm_ordered_acc is None:
-        vlm_ordered_acc = 40.00
+        vlm_ordered_acc = 68.00
     if vlm_shuffled_acc is None:
         vlm_shuffled_acc = 44.00
 
@@ -319,13 +319,14 @@ def plot_vlm_per_class(vlm_results_path):
         ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.8,
                 f"{acc:.0f}%", ha='center', va='bottom', fontsize=9, fontweight='bold')
 
+    model_label = vlm_data.get("model", "GPT-4o")
     overall_ordered  = vlm_data.get("ordered_acc", 0)
     overall_shuffled = vlm_data.get("shuffled_acc", 0)
     ax.axhline(y=20, color='gray', linestyle=':', linewidth=1.5, label='Random chance: 20%')
     ax.set_xlabel("Action Class", fontsize=12)
     ax.set_ylabel("Accuracy (%)", fontsize=12)
     ax.set_title(
-        f"VLM (LLaVA-OneVision) Per-Class Accuracy: Ordered {overall_ordered:.1f}% vs Shuffled {overall_shuffled:.1f}%",
+        f"VLM ({model_label}) Per-Class Accuracy — Ordered {overall_ordered:.1f}% vs Shuffled {overall_shuffled:.1f}%",
         fontsize=12, fontweight='bold'
     )
     ax.set_xticks(x)

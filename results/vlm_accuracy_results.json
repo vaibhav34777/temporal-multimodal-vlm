@@ -1,17 +1,18 @@
 {
-  "ordered_acc": 40.0,
+  "model": "gpt-4o",
+  "ordered_acc": 68.0,
   "shuffled_acc": 44.0,
   "records": [
     {
       "video_id": "85446",
       "class_name": "Pushing [something] from left to right",
       "true_label": 0,
-      "ordered_pred": 0,
-      "shuffled_pred": 0,
-      "ordered_correct": 1,
-      "shuffled_correct": 1,
-      "ordered_response": "0",
-      "shuffled_response": "0"
+      "ordered_pred": 1,
+      "shuffled_pred": 3,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the hand actively holding and moving the object.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object vertically downward toward the surface.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as it shows the hand holding the object and moving it downward toward the surface.\n\nStep 3 - Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3"
     },
     {
       "video_id": "91241",
@@ -21,206 +22,206 @@
       "shuffled_pred": 0,
       "ordered_correct": 0,
       "shuffled_correct": 1,
-      "ordered_response": "1",
-      "shuffled_response": "0"
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the hand actively moving the object to the left.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the left side toward the right side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the hand actively moving the object to the right.\n\nStep 3 - Label 0 = a hand moves an object HORIZONTALLY from the LEFT side toward the RIGHT side\n\nFINAL_LABEL: 0"
     },
     {
       "video_id": "201692",
       "class_name": "Pushing [something] from left to right",
       "true_label": 0,
       "ordered_pred": 0,
-      "shuffled_pred": 2,
+      "shuffled_pred": 1,
       "ordered_correct": 1,
       "shuffled_correct": 0,
-      "ordered_response": "0",
-      "shuffled_response": "2"
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving a lighter horizontally from the left side toward the right side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the hand actively moving the lighter to the right.\n\nStep 3 - Label 0 = a hand moves an object HORIZONTALLY from the LEFT side toward the RIGHT side\n\nFINAL_LABEL: 0",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving a lighter horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the hand actively moving the lighter.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1"
     },
     {
       "video_id": "30104",
       "class_name": "Pushing [something] from left to right",
       "true_label": 0,
-      "ordered_pred": 0,
-      "shuffled_pred": 0,
-      "ordered_correct": 1,
-      "shuffled_correct": 1,
-      "ordered_response": "0",
-      "shuffled_response": "0"
+      "ordered_pred": 1,
+      "shuffled_pred": 1,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as the object is visibly closer to the left side compared to its position in Frame 1.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as the object is visibly closer to the left side compared to its initial position.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1"
     },
     {
       "video_id": "54224",
       "class_name": "Pushing [something] from left to right",
       "true_label": 0,
       "ordered_pred": 0,
-      "shuffled_pred": 0,
+      "shuffled_pred": 1,
       "ordered_correct": 1,
-      "shuffled_correct": 1,
-      "ordered_response": "0",
-      "shuffled_response": "0"
+      "shuffled_correct": 0,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the left side toward the right side.\n\nStep 2 - Frame 1 provides the clearest evidence of direction as it shows the initial position of the hand on the left side, and subsequent frames show the hand moving the object to the right.\n\nStep 3 - Label 0 = a hand moves an object HORIZONTALLY from the LEFT side toward the RIGHT side\n\nFINAL_LABEL: 0",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 2 provides the clearest evidence of direction, as it shows the object positioned more to the left compared to Frame 1.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1"
     },
     {
       "video_id": "163169",
       "class_name": "Pushing [something] from right to left",
       "true_label": 1,
-      "ordered_pred": 2,
-      "shuffled_pred": 2,
-      "ordered_correct": 0,
-      "shuffled_correct": 0,
-      "ordered_response": "2",
-      "shuffled_response": "2"
+      "ordered_pred": 1,
+      "shuffled_pred": 1,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as the object is noticeably further to the left compared to its position in Frame 1.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as the object is positioned further to the left compared to its initial position in Frame 1.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1"
     },
     {
       "video_id": "161659",
       "class_name": "Pushing [something] from right to left",
       "true_label": 1,
-      "ordered_pred": 0,
+      "ordered_pred": 1,
       "shuffled_pred": 0,
-      "ordered_correct": 0,
+      "ordered_correct": 1,
       "shuffled_correct": 0,
-      "ordered_response": "0",
-      "shuffled_response": "0"
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving a cup horizontally from the right side toward the left side.\n\nStep 2 - Frame 2 provides the clearest evidence of direction as the hand is actively in contact with the cup, indicating movement from right to left.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving a cup horizontally from the left side toward the right side.\n\nStep 2 - Frame 2 provides the clearest evidence of direction as the cup is noticeably closer to the right side compared to Frame 1.\n\nStep 3 - Label 0 = a hand moves an object HORIZONTALLY from the LEFT side toward the RIGHT side\n\nFINAL_LABEL: 0"
     },
     {
       "video_id": "144311",
       "class_name": "Pushing [something] from right to left",
       "true_label": 1,
-      "ordered_pred": 0,
-      "shuffled_pred": 0,
-      "ordered_correct": 0,
-      "shuffled_correct": 0,
-      "ordered_response": "0",
-      "shuffled_response": "0"
+      "ordered_pred": 1,
+      "shuffled_pred": 1,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the hand actively pushing the object to the left.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving a blue cup horizontally from the right side toward the left side.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as it shows the hand on the left side of the cup, indicating movement from right to left.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1"
     },
     {
       "video_id": "150362",
       "class_name": "Pushing [something] from right to left",
       "true_label": 1,
-      "ordered_pred": 2,
+      "ordered_pred": 1,
       "shuffled_pred": 0,
-      "ordered_correct": 0,
+      "ordered_correct": 1,
       "shuffled_correct": 0,
-      "ordered_response": "2",
-      "shuffled_response": "0"
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving a purple cloth horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction, as it shows the hand actively moving the cloth from right to left.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving a purple cloth horizontally from the left side toward the right side.\n\nStep 2 - Frame 1 provides the clearest evidence of direction as it shows the hand initially holding the cloth on the left side, which is then moved to the right in subsequent frames.\n\nStep 3 - Label 0 = a hand moves an object HORIZONTALLY from the LEFT side toward the RIGHT side\n\nFINAL_LABEL: 0"
     },
     {
       "video_id": "39756",
       "class_name": "Pushing [something] from right to left",
       "true_label": 1,
-      "ordered_pred": 0,
-      "shuffled_pred": 0,
-      "ordered_correct": 0,
-      "shuffled_correct": 0,
-      "ordered_response": "0",
-      "shuffled_response": "0"
+      "ordered_pred": 1,
+      "shuffled_pred": 1,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the object further to the left compared to its initial position in Frame 1.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 2 provides the clearest evidence of direction as it shows the hand actively moving the object from right to left.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1"
     },
     {
       "video_id": "90063",
       "class_name": "Moving [something] up",
       "true_label": 2,
-      "ordered_pred": 2,
-      "shuffled_pred": 2,
-      "ordered_correct": 1,
-      "shuffled_correct": 1,
-      "ordered_response": "2",
-      "shuffled_response": "2"
+      "ordered_pred": 3,
+      "shuffled_pred": 3,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand holding a bottle, which appears to be moving vertically downward.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as the bottle is shown at the bottom of the frame, indicating downward movement.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving a bottle vertically downward.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as it shows the bottle at the bottom of the frame, indicating downward movement.\n\nStep 3 - Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3"
     },
     {
       "video_id": "88024",
       "class_name": "Moving [something] up",
       "true_label": 2,
-      "ordered_pred": 2,
-      "shuffled_pred": 2,
-      "ordered_correct": 1,
-      "shuffled_correct": 1,
-      "ordered_response": "2",
-      "shuffled_response": "2"
+      "ordered_pred": 1,
+      "shuffled_pred": 1,
+      "ordered_correct": 0,
+      "shuffled_correct": 0,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction, as it shows the hand actively holding and moving the object to the left.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 2 provides the clearest evidence of direction as it shows the hand actively holding and moving the object.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1"
     },
     {
       "video_id": "220085",
       "class_name": "Moving [something] up",
       "true_label": 2,
-      "ordered_pred": 0,
-      "shuffled_pred": 0,
-      "ordered_correct": 0,
+      "ordered_pred": 2,
+      "shuffled_pred": 3,
+      "ordered_correct": 1,
       "shuffled_correct": 0,
-      "ordered_response": "0",
-      "shuffled_response": "0"
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving a laptop vertically upward, away from the surface.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the laptop being lifted, with the hand visible underneath.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 2 = a hand moves an object VERTICALLY UPWARD (away from the surface, toward the top of frame)\n\nFINAL_LABEL: 2",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object vertically downward, toward the bottom of the frame.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as it shows the hand holding the object lower compared to the previous frames.\n\nStep 3 - Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3"
     },
     {
       "video_id": "24706",
       "class_name": "Moving [something] up",
       "true_label": 2,
-      "ordered_pred": 0,
-      "shuffled_pred": 0,
+      "ordered_pred": 1,
+      "shuffled_pred": 1,
       "ordered_correct": 0,
       "shuffled_correct": 0,
-      "ordered_response": "0",
-      "shuffled_response": "0"
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as the object is noticeably further to the left compared to its position in Frame 1.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object horizontally from the right side toward the left side.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as the object is noticeably further to the left compared to its position in Frame 1.\n\nStep 3 - Label 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1"
     },
     {
       "video_id": "102091",
       "class_name": "Moving [something] up",
       "true_label": 2,
-      "ordered_pred": 0,
+      "ordered_pred": 1,
       "shuffled_pred": 0,
       "ordered_correct": 0,
       "shuffled_correct": 0,
-      "ordered_response": "0",
-      "shuffled_response": "0"
+      "ordered_response": "Step 1 - Briefly describe the motion you observe across the frames (1-2 sentences). Pay close attention to the DIRECTION of movement (left, right, up, down).\n\nThe hand moves the green toy car horizontally from the right side toward the left side across the frames.\n\nStep 2 - State which frame number (1 to 4) provides the clearest evidence of direction and why.\n\nFrame 3 provides the clearest evidence of direction as the hand is actively moving the car to the left.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n\nLabel 1 = a hand moves an object HORIZONTALLY from the RIGHT side toward the LEFT side\n\nFINAL_LABEL: 1",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving a small green object horizontally from the left side toward the right side.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as the hand is no longer in contact with the object, indicating it has been moved to the right.\n\nStep 3 - Label 0 = a hand moves an object HORIZONTALLY from the LEFT side toward the RIGHT side\n\nFINAL_LABEL: 0"
     },
     {
       "video_id": "155885",
       "class_name": "Moving [something] down",
       "true_label": 3,
-      "ordered_pred": 2,
-      "shuffled_pred": 2,
-      "ordered_correct": 0,
-      "shuffled_correct": 0,
-      "ordered_response": "2",
-      "shuffled_response": "2"
+      "ordered_pred": 3,
+      "shuffled_pred": 3,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object vertically downward toward a surface.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as the object is closest to the surface, indicating a downward movement.\n\nStep 3 - Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving a ball vertically downward toward a surface.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as the ball is closest to the surface, indicating downward movement.\n\nStep 3 - Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3"
     },
     {
       "video_id": "6565",
       "class_name": "Moving [something] down",
       "true_label": 3,
       "ordered_pred": 3,
-      "shuffled_pred": 0,
+      "shuffled_pred": 2,
       "ordered_correct": 1,
       "shuffled_correct": 0,
-      "ordered_response": "3",
-      "shuffled_response": "0"
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object vertically downward.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as the object is closest to the bottom of the frame, indicating downward movement.\n\nStep 3 - Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows the hand moving the object vertically upward.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as the background indicates a higher position compared to the earlier frames.\n\nStep 3 - Label 2 = a hand moves an object VERTICALLY UPWARD (away from the surface, toward the top of frame)\n\nFINAL_LABEL: 2"
     },
     {
       "video_id": "187093",
       "class_name": "Moving [something] down",
       "true_label": 3,
-      "ordered_pred": 4,
-      "shuffled_pred": 4,
-      "ordered_correct": 0,
+      "ordered_pred": 3,
+      "shuffled_pred": 2,
+      "ordered_correct": 1,
       "shuffled_correct": 0,
-      "ordered_response": "4",
-      "shuffled_response": "4"
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand placing an object vertically downward onto a surface.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the hand holding the object above the surface before placing it down.\n\nStep 3 - Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand lifting an object vertically upward from a surface.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the hand holding the object above the surface, indicating upward movement.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 2 = a hand moves an object VERTICALLY UPWARD (away from the surface, toward the top of frame)\n\nFINAL_LABEL: 2"
     },
     {
       "video_id": "1181",
       "class_name": "Moving [something] down",
       "true_label": 3,
-      "ordered_pred": 2,
-      "shuffled_pred": 2,
-      "ordered_correct": 0,
-      "shuffled_correct": 0,
-      "ordered_response": "2",
-      "shuffled_response": "2"
+      "ordered_pred": 3,
+      "shuffled_pred": 3,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object vertically downward.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as the hand is at the lowest point compared to the previous frames.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object vertically downward.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as the hand is at the lowest point compared to the other frames.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3"
     },
     {
       "video_id": "87616",
       "class_name": "Moving [something] down",
       "true_label": 3,
-      "ordered_pred": 2,
-      "shuffled_pred": 0,
-      "ordered_correct": 0,
-      "shuffled_correct": 0,
-      "ordered_response": "2",
-      "shuffled_response": "0"
+      "ordered_pred": 3,
+      "shuffled_pred": 3,
+      "ordered_correct": 1,
+      "shuffled_correct": 1,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object vertically downward, then back upward.\n\nStep 2 - Frame 2 provides the clearest evidence of direction as it shows the object being held lower compared to Frame 3, indicating a downward movement.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand holding an object, which is then released, allowing the object to fall downward.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as the object is no longer in the hand and is absent from the frame, indicating it has moved downward.\n\nStep 3 - Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3"
     },
     {
       "video_id": "7284",
@@ -230,8 +231,8 @@
       "shuffled_pred": 4,
       "ordered_correct": 1,
       "shuffled_correct": 1,
-      "ordered_response": "4",
-      "shuffled_response": "4"
+      "ordered_response": "Step 1 - The motion observed across the frames shows a person tearing a paper towel into two separate pieces.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the paper towel split into two separate pieces.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 4 = a hand TEARS an object, splitting it into two separate pieces\n\nFINAL_LABEL: 4",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a person tearing a paper towel, splitting it into two separate pieces.\n\nStep 2 - Frame 2 provides the clearest evidence of direction as it shows the paper towel being separated into two pieces.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 4 = a hand TEARS an object, splitting it into two separate pieces\n\nFINAL_LABEL: 4"
     },
     {
       "video_id": "199520",
@@ -241,30 +242,30 @@
       "shuffled_pred": 4,
       "ordered_correct": 1,
       "shuffled_correct": 1,
-      "ordered_response": "4",
-      "shuffled_response": "4"
+      "ordered_response": "Step 1 - The motion observed across the frames is the tearing of a piece of paper into two separate pieces.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the paper completely torn into two separate pieces.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 4 = a hand TEARS an object, splitting it into two separate pieces\n\nFINAL_LABEL: 4",
+      "shuffled_response": "Step 1 - The motion observed across the frames is the tearing of a piece of paper into two separate pieces.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the paper already torn into two separate pieces.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 4 = a hand TEARS an object, splitting it into two separate pieces\n\nFINAL_LABEL: 4"
     },
     {
       "video_id": "185796",
       "class_name": "Tearing [something] into two pieces",
       "true_label": 4,
-      "ordered_pred": 0,
-      "shuffled_pred": 4,
+      "ordered_pred": 3,
+      "shuffled_pred": 3,
       "ordered_correct": 0,
-      "shuffled_correct": 1,
-      "ordered_response": "0",
-      "shuffled_response": "4"
+      "shuffled_correct": 0,
+      "ordered_response": "Step 1 - The motion observed across the frames shows a hand moving an object vertically downward toward the surface.\n\nStep 2 - Frame 2 provides the clearest evidence of direction as it shows the object closer to the surface compared to the other frames.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a hand moving an object vertically downward toward the surface.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as it shows the object closest to the surface, indicating a downward movement.\n\nStep 3 - Label 3 = a hand moves an object VERTICALLY DOWNWARD (toward the surface, toward the bottom of frame)\n\nFINAL_LABEL: 3"
     },
     {
       "video_id": "7232",
       "class_name": "Tearing [something] into two pieces",
       "true_label": 4,
-      "ordered_pred": 0,
+      "ordered_pred": 4,
       "shuffled_pred": 4,
-      "ordered_correct": 0,
+      "ordered_correct": 1,
       "shuffled_correct": 1,
-      "ordered_response": "0",
-      "shuffled_response": "4"
+      "ordered_response": "Step 1 - The motion observed across the frames shows the person tearing a piece of paper.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the paper being split into two separate pieces.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 4 = a hand TEARS an object, splitting it into two separate pieces\n\nFINAL_LABEL: 4",
+      "shuffled_response": "Step 1 - The motion observed across the frames shows a person holding a piece of paper and tearing it.\n\nStep 2 - Frame 2 provides the clearest evidence of direction as it shows the paper being torn apart.\n\nStep 3 - Select exactly one label from the numbered list below. Read each description carefully before deciding:\n   Label 4 = a hand TEARS an object, splitting it into two separate pieces\n\nFINAL_LABEL: 4"
     },
     {
       "video_id": "191667",
@@ -274,8 +275,8 @@
       "shuffled_pred": 4,
       "ordered_correct": 1,
       "shuffled_correct": 1,
-      "ordered_response": "4",
-      "shuffled_response": "4"
+      "ordered_response": "Step 1 - The motion observed across the frames is the tearing of a piece of paper, resulting in it being split into two separate pieces.\n\nStep 2 - Frame 4 provides the clearest evidence of direction as it shows the paper completely torn into two pieces.\n\nStep 3 - Label 4 = a hand TEARS an object, splitting it into two separate pieces\n\nFINAL_LABEL: 4",
+      "shuffled_response": "Step 1 - The motion observed across the frames is the tearing of a piece of paper into two separate pieces.\n\nStep 2 - Frame 3 provides the clearest evidence of direction as it shows the paper already torn into two pieces.\n\nStep 3 - Label 4 = a hand TEARS an object, splitting it into two separate pieces\n\nFINAL_LABEL: 4"
     }
   ]
 }
