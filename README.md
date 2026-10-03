@@ -143,7 +143,6 @@ This design produces interpretable reasoning traces per video and doubles as a p
 | *Moving down* | **100%** | 60% | −40pp |
 | *Tearing into two pieces* | 80% | 80% | 0pp |
 
-![VLM Per-Class Accuracy](results/vlm_per_class_accuracy.png)
 
 ### Analysis
 
