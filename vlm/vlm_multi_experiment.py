@@ -22,48 +22,54 @@ CLASS_NAMES = [
 LABEL_MAP = {name: idx for idx, name in enumerate(CLASS_NAMES)}
 
 VLM_PROMPT = (
-    "You are shown {n} sequential video frames of a hand action.\n"
-    "1. Briefly explain what is happening across the sequence.\n"
-    "2. Identify which specific frame (e.g. Frame 1, Frame 4) is the most decisive or helpful in recognizing the true action, and explain why.\n"
-    "3. Classify the action into exactly one of the following categories:\n"
-    "0: Pushing [something] from left to right\n"
-    "1: Pushing [something] from right to left\n"
-    "2: Moving [something] up\n"
-    "3: Moving [something] down\n"
-    "4: Tearing [something] into two pieces\n\n"
-    "Provide your response in the following exact format:\n"
-    "Explanation: <your reasoning>\n"
-    "Decisive Frame: <frame number or description>\n"
-    "Label: <integer label>"
+    "You are shown {n} video frames in chronological order of a single hand action.\n\n"
+    "Step 1 - Briefly describe what is happening across the frames (1-2 sentences).\n"
+    "Step 2 - State which frame number (1 to {n}) is the most decisive for identifying the action and why.\n"
+    "Step 3 - Choose the action label from the list below:\n"
+    "   0 = Pushing something from left to right\n"
+    "   1 = Pushing something from right to left\n"
+    "   2 = Moving something up\n"
+    "   3 = Moving something down\n"
+    "   4 = Tearing something into two pieces\n\n"
+    "End your response with this exact line:\n"
+    "FINAL_LABEL: <write only the digit 0, 1, 2, 3, or 4 here>"
 )
 
 
 def parse_label(response_text):
-    for line in response_text.split('\n'):
-        if line.lower().startswith('label:'):
+    for line in reversed(response_text.strip().split('\n')):
+        line = line.strip()
+        if 'final_label' in line.lower():
             for ch in line:
-                if ch in "01234":
+                if ch in '01234':
                     return int(ch)
-    # fallback
-    for ch in response_text[::-1]:
-        if ch in "01234":
-            return int(ch)
+    for line in reversed(response_text.strip().split('\n')):
+        line = line.strip()
+        if line in ('0', '1', '2', '3', '4'):
+            return int(line)
+    import re
+    matches = re.findall(r'(?<!\d)([0-4])(?!\d)', response_text)
+    if matches:
+        return int(matches[-1])
     return -1
 
 
-def load_model():
-    print("Loading LLaVA-OneVision model in 4-bit...")
-    model_id = "llava-hf/llava-onevision-qwen2-0.5b-ov-hf"
+def load_model(model_id="llava-hf/llava-onevision-qwen2-7b-ov-hf"):
+    print(f"Loading LLaVA-OneVision model ({model_id}) in 4-bit NF4...")
     quantization_config = BitsAndBytesConfig(
         load_in_4bit=True,
-        bnb_4bit_compute_dtype=torch.float16
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_use_double_quant=True,
+        bnb_4bit_compute_dtype=torch.bfloat16
     )
     processor = AutoProcessor.from_pretrained(model_id)
     model = LlavaOnevisionForConditionalGeneration.from_pretrained(
         model_id,
         quantization_config=quantization_config,
-        device_map="auto"
+        device_map="auto",
+        low_cpu_mem_usage=True
     )
+    model.eval()
     return processor, model
 
 
@@ -79,7 +85,7 @@ def get_frame_paths(video_id, frames_base_dir, num_frames=4):
 
 
 def run_vlm_classification(processor, model, frame_paths, shuffled=False):
-    images = [Image.open(p).convert("RGB") for p in frame_paths]
+    images = [Image.open(p).convert("RGB").resize((224, 224)) for p in frame_paths]
     if shuffled:
         images = random.sample(images, len(images))
 
@@ -93,13 +99,20 @@ def run_vlm_classification(processor, model, frame_paths, shuffled=False):
         }
     ]
     text_input = processor.apply_chat_template(conversation, add_generation_prompt=True)
+
+    torch.cuda.empty_cache()
     inputs = processor(text=text_input, images=images, return_tensors="pt").to(model.device)
 
     with torch.no_grad():
-        output = model.generate(**inputs, max_new_tokens=150, do_sample=False)
+        output = model.generate(**inputs, max_new_tokens=200, do_sample=False)
 
     decoded = processor.decode(output[0], skip_special_tokens=True)
     response = decoded.split("assistant")[-1].strip() if "assistant" in decoded.lower() else decoded.strip()
+
+    del inputs
+    del output
+    torch.cuda.empty_cache()
+
     return response, parse_label(response)
 
 
@@ -139,6 +152,10 @@ def run_accuracy_experiment(processor, model, df, frames_base_dir, num_videos=25
             "frame_paths": frame_paths
         })
         print(f"  [{video_id}] GT={true_label} | Ordered={ordered_pred} ({'OK' if ordered_pred==true_label else 'X'}) | Shuffled={shuffled_pred} ({'OK' if shuffled_pred==true_label else 'X'})")
+        if len(results) <= 3:
+            print(f"  --- Raw response (first 3 videos for format verification) ---")
+            print(ordered_response[:800])
+            print(f"  ---------------------------------------------------------------")
 
     ordered_acc = 100.0 * sum(r['ordered_correct'] for r in results) / len(results) if results else 0.0
     shuffled_acc = 100.0 * sum(r['shuffled_correct'] for r in results) / len(results) if results else 0.0
@@ -274,6 +291,7 @@ if __name__ == "__main__":
     parser.add_argument('--num_frames', type=int, default=4)
     parser.add_argument('--output_dir', type=str, default='/kaggle/working/results')
     parser.add_argument('--results_json', type=str, default='/kaggle/working/results/vlm_accuracy_results.json')
+    parser.add_argument('--model_id', type=str, default='llava-hf/llava-onevision-qwen2-7b-ov-hf')
     args, _ = parser.parse_known_args()
 
     val_csv = args.val_csv
@@ -285,7 +303,7 @@ if __name__ == "__main__":
 
     df = pd.read_csv(val_csv)
 
-    processor, model = load_model()
+    processor, model = load_model(args.model_id)
 
     print(f"\nRunning classification on {args.num_videos} videos (ordered + shuffled)...")
     results, ordered_acc, shuffled_acc = run_accuracy_experiment(

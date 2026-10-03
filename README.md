@@ -123,9 +123,6 @@ Accuracy climbs monotonically as more temporal context unfolds, with the sharpes
 ## Repository Structure
 
 ```
-├── data/                                  Directory containing train_subset.csv and val_subset.csv splits
-├── models/                                Saved model checkpoint weights (.pth)
-├── embeddings/                            Extracted numpy frame representations (384-dim DINOv2 CLS tokens)
 ├── results/                               Primary experimental output directory containing plots and evaluation logs
 │   ├── model_success_failure.png          Qualitative visual grid comparing model predictions on sample sequences
 │   ├── per_class_accuracy.png             Bar plot comparing per-class accuracy across all four architectures
@@ -135,11 +132,6 @@ Accuracy climbs monotonically as more temporal context unfolds, with the sharpes
 │   ├── vlm_accuracy_results.json          JSON log containing per-sample predictions from the VLM experiment
 │   ├── vlm_experiment_report.pdf          Compiled PDF report of sample qualitative VLM outputs
 │   └── vlm_per_class_accuracy.png         Per-class ordered vs. shuffled accuracy plot for the VLM
-├── visualizations/                        Dataset diagnostic plots and conceptual architecture visuals
-│   ├── cosine_similarity.png              Consecutive frame embedding cosine similarity analysis
-│   ├── dataset_statistics.png             Sample distribution bar chart across train and validation splits
-│   ├── diagram.png                        End-to-end multimodal perception system architecture diagram
-│   └── frame_strips.png                   8-frame sequential sample strips across all action categories
 ├── scripts/                               Visualization and diagnostic generation scripts
 │   ├── plot_success_failure.py            Finds representative validation cases and plots qualitative grid
 │   └── visualize.py                       Computes all quantitative evaluation charts and zips result artifacts
@@ -150,6 +142,11 @@ Accuracy climbs monotonically as more temporal context unfolds, with the sharpes
 │   ├── models.py                          PyTorch definitions for SingleFrame, GRU, and Transformer (+/- PE)
 │   ├── prepare_dataset.py                 Samples 8 frames per raw video and generates dataset split indices
 │   └── train.py                           Training pipeline with linear warmup, cosine decay, and checkpoint saving
+├── visualizations/                        Dataset diagnostic plots and conceptual architecture visuals
+│   ├── cosine_similarity.png              Consecutive frame embedding cosine similarity analysis
+│   ├── dataset_statistics.png             Sample distribution bar chart across train and validation splits
+│   ├── diagram.png                        End-to-end multimodal perception system architecture diagram
+│   └── frame_strips.png                   8-frame sequential sample strips across all action categories
 ├── vlm/                                   Vision-Language Model evaluation package
 │   └── vlm_multi_experiment.py            VLM evaluation script running classification and decisive-frame extraction
 ├── requirements.txt                       Reproducible environment dependencies
